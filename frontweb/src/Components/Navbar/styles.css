@@ -1,0 +1,108 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f8f8;
+  height: 60px;
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #ccc;
+  z-index: 0;
+}
+
+.navbar-logo {
+  padding: 10px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-icon {
+  position: relative;
+  margin-right: 20px;
+}
+
+.navbar-icon-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  display: none;
+  min-width: 160px;
+  margin-top: 10px;
+}
+
+.navbar-icon:hover .navbar-dropdown {
+  display: block;
+}
+
+.navbar-dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.navbar-dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+.perfil-icon-container {
+  position: relatiave;
+}
+
+.perfil-menu {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  padding: 10px;
+  list-style: none;
+}
+
+.perfil-menu li {
+  margin-bottom: 5px;
+}
+
+.perfil-menu a {
+  color: #333333;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.perfil-menu a:hover {
+  text-decoration: dotted;
+}
+
+.notification-container {
+  width: 400px;
+  height: 300px;
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  padding: 10px;
+  list-style: none;
+  overflow-y: auto;
+}
