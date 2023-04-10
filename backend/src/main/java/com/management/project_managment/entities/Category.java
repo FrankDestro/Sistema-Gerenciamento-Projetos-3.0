@@ -23,7 +23,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 
 @Entity
-@Table(name = "tb_catergory")
+@Table(name = "tb_category")
 public class Category {
 	
 	@Id

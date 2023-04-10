@@ -1,5 +1,9 @@
 package com.management.project_managment.services;
 
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -8,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +42,6 @@ public class ProjectService {
 	
 	@Autowired 
 	private AuthService authService;
-	
 
 	@Transactional
 	public ProjectDTO CreateNewProject(ProjectDTO dto) {
@@ -74,22 +78,48 @@ public class ProjectService {
 			throw new DatabaseException("Integrity violation");
 		}
 	}
-		
+
+
 	@Transactional(readOnly = true)
 	public Page<ProjectDTO> findAllProjects(Pageable pageable) {
-		Page<Project> list = projectRepository.findAll(pageable);
-		return list.map(x -> new ProjectDTO(x));
+		Page<Project> projects = projectRepository.findAll(pageable);
+		List<ProjectDTO> projectDTOs = new ArrayList<>();
+
+		for (Project project : projects) {
+			ProjectDTO projectDTO = new ProjectDTO(project);
+			projectDTO.setPercentCompleted(projectRepository.PercentualConcluido(project.getId()));
+			List<Object[]> projectTasks = projectRepository.findProjectTasks();
+			for (Object[] taskCount : projectTasks) {
+				projectDTO.setTotalTasks(((BigInteger) taskCount[0]).intValue());
+				projectDTO.setUnfinishedTasks(((BigInteger) taskCount[1]).intValue());
+				projectDTO.setCompletedTasks(((BigInteger) taskCount[2]).intValue());
+			}
+			projectDTOs.add(projectDTO);
+		}
+
+		return new PageImpl<>(projectDTOs, pageable, projects.getTotalElements());
 	}
-	
 
 	@Transactional(readOnly = true)
 	public ProjectDTO findById(Long id) {
 		Optional<Project> obj = projectRepository.findById(id);
 		Project entity = obj.orElseThrow(() -> new ResourceNotFoundException("Project not found"));
-		return new ProjectDTO(entity);
+		ProjectDTO dto = new ProjectDTO(entity);
+
+		// First query
+		List<Object[]> projectTasks = projectRepository.findProjectTasks();
+		for (Object[] taskCount : projectTasks) {
+			dto.setTotalTasks(((BigInteger) taskCount[0]).intValue());
+			dto.setUnfinishedTasks(((BigInteger) taskCount[1]).intValue());
+			dto.setCompletedTasks(((BigInteger) taskCount[2]).intValue());
+		}
+		// Second query
+		Double percentCompleted = projectRepository.PercentualConcluido(id);
+		dto.setPercentCompleted(percentCompleted);
+
+		return dto;
 	}
-	
-	
+
 	private void copyDtoToEntity(ProjectDTO dto, Project entity) {
 
 		entity.setName(dto.getName());
@@ -101,7 +131,7 @@ public class ProjectService {
 		entity.setBudget(dto.getBudget());
 		entity.setExpenses(dto.getExpenses());
 		entity.setInvoicing(dto.getInvoicing());
-		entity.setOwner(dto.getOwner());
+		entity.setOwnerId(dto.getOwner());
 		Client client = clientRepository.getOne(dto.getClient());
 		entity.setClient(client);
 		

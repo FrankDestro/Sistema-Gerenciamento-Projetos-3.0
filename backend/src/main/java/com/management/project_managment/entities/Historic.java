@@ -1,0 +1,36 @@
+package com.management.project_managment.entities;
+
+
+import lombok.*;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.Date;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+
+@Entity
+@Table(name = "tb_historic")
+public class Historic implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(columnDefinition = "TEXT")
+    private String description;
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant date;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
+}
+
+

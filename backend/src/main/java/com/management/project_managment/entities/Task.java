@@ -2,15 +2,10 @@ package com.management.project_managment.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.management.project_managment.enums.Status;
 
@@ -51,6 +46,5 @@ public class Task implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "id_project")
 	private Project project;
-	
-	
+
 }
