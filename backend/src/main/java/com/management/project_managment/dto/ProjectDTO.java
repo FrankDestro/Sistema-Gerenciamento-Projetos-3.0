@@ -30,6 +30,7 @@ public class ProjectDTO implements Serializable {
 	private int totalTasks;
 	private int unfinishedTasks;
 	private int completedTasks;
+	private int canceledTasks;
 
 
 	Set<TaskDTO> tasks = new HashSet<>();
@@ -42,7 +43,8 @@ public class ProjectDTO implements Serializable {
 	}
 
 	public ProjectDTO(Long id, String name, String description, Date initialDate, Date dueData, Status status, String imgUrl, Double budget, Double expenses,
-					  Double invoicing, Long owner, Long client, String clientName, Long categoryId, String categoryDescription, Double percentCompleted,  int totalTasks, int unfinishedTasks, int completedTasks) {
+					  Double invoicing, Long owner, Long client, String clientName, Long categoryId,
+					  String categoryDescription, Double percentCompleted,  int totalTasks, int unfinishedTasks, int completedTasks, int canceledTasks) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -62,6 +64,7 @@ public class ProjectDTO implements Serializable {
 		this.totalTasks = totalTasks;
 		this.unfinishedTasks = unfinishedTasks;
 		this.completedTasks = completedTasks;
+		this.canceledTasks = canceledTasks;
 	}
 
 	public ProjectDTO(Project entity) {
@@ -236,6 +239,14 @@ public class ProjectDTO implements Serializable {
 
 	public void setCompletedTasks(int completedTasks) {
 		this.completedTasks = completedTasks;
+	}
+	
+	public int getCanceledTasks() {
+		return canceledTasks;
+	}
+
+	public void setCanceledTasks(int canceledTasks) {
+		this.canceledTasks = canceledTasks;
 	}
 
 	public Set<TaskDTO> getTasks() {

@@ -46,5 +46,12 @@ public class Task implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "id_project")
 	private Project project;
+	
+	@OneToMany(mappedBy = "project")
+	private Set<Historic> historical = new HashSet<>();
+
+	public Task(long taskNull) {
+		this.id = taskNull;
+	}
 
 }

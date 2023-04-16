@@ -1,8 +1,9 @@
 package com.management.project_managment.services;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,9 +12,6 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +20,7 @@ import com.management.project_managment.dto.TaskDTO;
 import com.management.project_managment.entities.Client;
 import com.management.project_managment.entities.Project;
 import com.management.project_managment.entities.Task;
+import com.management.project_managment.projections.SummaryProjectByDateProjection;
 import com.management.project_managment.repositories.ClientRepository;
 import com.management.project_managment.repositories.ProjectRepository;
 import com.management.project_managment.repositories.TaskRepository;
@@ -42,7 +41,17 @@ public class ProjectService {
 	
 	@Autowired 
 	private AuthService authService;
-
+	
+	
+	@Transactional(readOnly = true)
+	public List<SummaryProjectByDateProjection> getSummaryProjectByDate(String initialDate1, String initialDate2) throws ParseException {
+		Timestamp min = "".equals(initialDate1) ? null
+				: new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(initialDate1 + " 00:00:00").getTime());
+		Timestamp max = "".equals(initialDate2) ? null
+				: new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(initialDate2 + " 00:00:00").getTime());
+	    return projectRepository.SummaryProjectByDate(min, max);
+	}
+	
 	@Transactional
 	public ProjectDTO CreateNewProject(ProjectDTO dto) {
 		authService.validaIfUserIsAdmin();
@@ -79,47 +88,27 @@ public class ProjectService {
 		}
 	}
 
-
-	@Transactional(readOnly = true)
-	public Page<ProjectDTO> findAllProjects(Pageable pageable) {
-		Page<Project> projects = projectRepository.findAll(pageable);
-		List<ProjectDTO> projectDTOs = new ArrayList<>();
-
-		for (Project project : projects) {
-			ProjectDTO projectDTO = new ProjectDTO(project);
-			projectDTO.setPercentCompleted(projectRepository.PercentualConcluido(project.getId()));
-			List<Object[]> projectTasks = projectRepository.findProjectTasks();
-			for (Object[] taskCount : projectTasks) {
-				projectDTO.setTotalTasks(((BigInteger) taskCount[0]).intValue());
-				projectDTO.setUnfinishedTasks(((BigInteger) taskCount[1]).intValue());
-				projectDTO.setCompletedTasks(((BigInteger) taskCount[2]).intValue());
-			}
-			projectDTOs.add(projectDTO);
-		}
-
-		return new PageImpl<>(projectDTOs, pageable, projects.getTotalElements());
-	}
-
 	@Transactional(readOnly = true)
 	public ProjectDTO findById(Long id) {
-		Optional<Project> obj = projectRepository.findById(id);
-		Project entity = obj.orElseThrow(() -> new ResourceNotFoundException("Project not found"));
-		ProjectDTO dto = new ProjectDTO(entity);
+	    Optional<Project> obj = projectRepository.findById(id);
+	    Project entity = obj.orElseThrow(() -> new ResourceNotFoundException("Project not found"));
+	    ProjectDTO dto = new ProjectDTO(entity);
 
-		// First query
-		List<Object[]> projectTasks = projectRepository.findProjectTasks();
-		for (Object[] taskCount : projectTasks) {
-			dto.setTotalTasks(((BigInteger) taskCount[0]).intValue());
-			dto.setUnfinishedTasks(((BigInteger) taskCount[1]).intValue());
-			dto.setCompletedTasks(((BigInteger) taskCount[2]).intValue());
-		}
-		// Second query
-		Double percentCompleted = projectRepository.PercentualConcluido(id);
-		dto.setPercentCompleted(percentCompleted);
+	    Object[] projectTasks = projectRepository.findProjectTasks(id).stream().findFirst().orElse(null);
+	    if (projectTasks != null) {
+	        dto.setTotalTasks(((BigInteger) projectTasks[0]).intValue());
+	        dto.setUnfinishedTasks(((BigInteger) projectTasks[1]).intValue());
+	        dto.setCompletedTasks(((BigInteger) projectTasks[2]).intValue());
+	        dto.setCanceledTasks(((BigInteger) projectTasks[3]).intValue());
+	    }
 
-		return dto;
+	    Double percentCompleted = projectRepository.PercentualConcluido(id);
+	    dto.setPercentCompleted(percentCompleted);
+
+	    return dto;
 	}
 
+	
 	private void copyDtoToEntity(ProjectDTO dto, Project entity) {
 
 		entity.setName(dto.getName());

@@ -37,9 +37,6 @@ public class Project implements Serializable {
 	private Double invoicing;
 	private Long ownerId;
 	private Double percentCompleted;
-	/*private int totalTasks;
-	private int unfinishedTasks;
-	private int completedTasks;*/
 
 	@OneToMany(mappedBy = "project")
 	private Set<Task> tasks = new HashSet<>();
@@ -57,7 +54,7 @@ public class Project implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
-
+	
 	public Project() {
 	}
 
@@ -77,10 +74,12 @@ public class Project implements Serializable {
 		this.percentCompleted = percentCompleted;
 		this.client = client;
 		this.category = category;
-		/*this.totalTasks = totalTasks;
-		this.unfinishedTasks = unfinishedTasks;
-		this.completedTasks = completedTasks;*/
 	}
+	
+	public Project(long projectNull) {
+		this.id = projectNull;
+	}
+
 
 	public Long getId() {
 		return id;
@@ -197,30 +196,6 @@ public class Project implements Serializable {
 	public void setPercentCompleted(Double percentCompleted) {
 		this.percentCompleted = percentCompleted;
 	}
-
-	/*public int getTotalTasks() {
-		return totalTasks;
-	}
-
-	public void setTotalTasks(int totalTasks) {
-		this.totalTasks = totalTasks;
-	}
-
-	public int getUnfinishedTasks() {
-		return unfinishedTasks;
-	}
-
-	public void setUnfinishedTasks(int unfinishedTasks) {
-		this.unfinishedTasks = unfinishedTasks;
-	}
-
-	public int getCompletedTasks() {
-		return completedTasks;
-	}
-
-	public void setCompletedTasks(int completedTasks) {
-		this.completedTasks = completedTasks;
-	}*/
 
 	public Set<Historic> getHistorical() {
 		return historical;
