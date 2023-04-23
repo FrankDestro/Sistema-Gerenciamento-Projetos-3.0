@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f8f8f8;
+  background-color: #f7f7fa;
   height: 60px;
   padding: 0 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -22,6 +22,14 @@
 .navbar-icon {
   position: relative;
   margin-right: 20px;
+}
+
+.navbar-icon ul li:hover {
+  background-color: #d5d1d1;
+}
+
+.navbar-icon ul li a:hover {
+  color: rgb(46, 111, 202);
 }
 
 .navbar-icon-badge {
@@ -75,18 +83,21 @@
   background-color: #ffffff;
   border: 1px solid #cccccc;
   border-radius: 5px;
-  padding: 10px;
+  padding: 10px 0px 10px 0px;
   list-style: none;
+  width: 150px;
 }
 
 .perfil-menu li {
   margin-bottom: 5px;
+  padding: 0px 10px 0px 10px;
 }
 
 .perfil-menu a {
   color: #333333;
   text-decoration: none;
   font-size: 14px;
+  margin-left: 10px;
 }
 
 .perfil-menu a:hover {
@@ -105,4 +116,11 @@
   padding: 10px;
   list-style: none;
   overflow-y: auto;
+}
+
+.auth-logon-email {
+  font-size: 14px;
+  margin-right: 15px;
+  color: rgba(68, 68, 68, 0.897);
+  font-weight: 600;
 }

@@ -4,31 +4,46 @@ import GroupIcon from '@rsuite/icons/legacy/Group';
 import MagicIcon from '@rsuite/icons/legacy/Magic';
 import React from 'react';
 import { Nav, Sidenav } from 'rsuite';
-
 import './styles.css';
+import { NavLink } from 'react-router-dom';
 
 const SideNav = () => {
   const [expanded, setExpanded] = React.useState(true);
   const [activeKey, setActiveKey] = React.useState('1');
   const [width, setWidth] = React.useState(240);
 
-  const handleToggle = (expanded: boolean | ((prevState: boolean) => boolean)) => {
+  const handleToggle = (
+    expanded: boolean | ((prevState: boolean) => boolean)
+  ) => {
     setExpanded(expanded);
     setWidth(expanded ? 240 : 80);
-  }
+  };
 
   return (
     <div style={{ width: width }}>
-      <Sidenav expanded={expanded} defaultOpenKeys={['3', '4']} className='sidenav-main'>
+      <Sidenav
+        expanded={expanded}
+        defaultOpenKeys={['3', '4']}
+        className="sidenav-main"
+      >
         <Sidenav.Body>
           <Nav activeKey={activeKey} onSelect={setActiveKey}>
             <Nav.Item eventKey="1" icon={<DashboardIcon />}>
-              Dashboard
+            <NavLink to="/projetos" className="teste4">
+                Projetos
+              </NavLink>
             </Nav.Item>
             <Nav.Item eventKey="2" icon={<GroupIcon />}>
-              User Group
+              <NavLink to="/tarefas" className="teste4">
+                Tarefas
+              </NavLink>
             </Nav.Item>
-            <Nav.Menu placement="rightStart" eventKey="3" title="Advanced" icon={<MagicIcon />}>
+            <Nav.Menu
+              placement="rightStart"
+              eventKey="3"
+              title="Advanced"
+              icon={<MagicIcon />}
+            >
               <Nav.Item eventKey="3-1">Geo</Nav.Item>
               <Nav.Item eventKey="3-2">Devices</Nav.Item>
               <Nav.Item eventKey="3-3">Loyalty</Nav.Item>

@@ -5,6 +5,9 @@ import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +30,13 @@ public class ProjectResource {
 	
 	@Autowired
 	private ProjectService projectService;
-	
+
+
+	@GetMapping
+	public ResponseEntity<Page<ProjectDTO>> findAll(Pageable pageable) {
+		Page<ProjectDTO> list = projectService.findAllPaged(pageable);
+		return ResponseEntity.ok().body(list);
+	}
 	
 	@GetMapping(value = "/summaryProjectsByDate")
 	public ResponseEntity<List<SummaryProjectByDateProjection>> getSummaryProjectByDate(
