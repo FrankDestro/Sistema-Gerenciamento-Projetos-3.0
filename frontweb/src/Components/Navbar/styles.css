@@ -16,7 +16,8 @@
 
 .navbar-right {
   display: flex;
-  align-items: center;
+  padding: 10px;
+  margin-right: 0px;
 }
 
 .navbar-icon {
@@ -123,4 +124,25 @@
   margin-right: 15px;
   color: rgba(68, 68, 68, 0.897);
   font-weight: 600;
+}
+
+.css-azeo8y-MuiAvatar-root {
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.MuiBox-root.css-5nwj3y {
+  width: 30px !important;
+  height: 30px !important;
+  margin-right: 10px;
+}
+
+.css-137ul40-MuiButtonBase-root-MuiIconButton-root {
+  margin-left: 0px !important;
+  margin-bottom: 10px !important;
+}
+
+.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeSmall.css-137ul40-MuiButtonBase-root-MuiIconButton-root {
+  width: 30px !important;
+  height: 30px !important;
 }

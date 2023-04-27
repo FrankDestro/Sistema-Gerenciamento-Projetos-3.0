@@ -1,13 +1,26 @@
-import { Link, useHistory, useLocation } from 'react-router-dom';
-import './styles.css';
+import Alert from '@mui/material/Alert';
+import TextField from '@mui/material/TextField';
+import { AuthContext } from 'AuthContext';
 import ButtonIcon from 'Components/ButtonIcon';
 import { ReactComponent as LogonIcon } from 'assets/images/logon-icon.svg';
 import { useContext, useState } from 'react';
-import { AuthContext } from 'AuthContext';
 import { useForm } from 'react-hook-form';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import { getTokenData } from 'utils/auth';
 import { requestBackendLogin } from 'utils/request';
 import { saveAuthData } from 'utils/storage';
-import { getTokenData } from 'utils/auth';
+
+import './styles.css';
+import React from 'react';
+import {
+  FormControl,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from '@mui/material';
+import { Height, Visibility, VisibilityOff } from '@material-ui/icons';
 
 type FormData = {
   username: string;
@@ -20,6 +33,16 @@ type LocationState = {
 
 function Login() {
   const location = useLocation<LocationState>();
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   const { from } = location.state || { from: { pathname: '/home' } };
 
@@ -59,48 +82,93 @@ function Login() {
       </div>
       <h1>logar</h1>
       {hasError && (
-        <div className="alert alert-danger">Erro ao tentar efetuar o login</div>
+        <div className="alert-erro-logon">
+          <Alert variant="filled" severity="error">
+            Erro ao efetuar Logon!
+          </Alert>
+        </div>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
+        <TextField
+          id="outlined-textarea"
+          label="E-mail"
+          placeholder="example@gmail.com"
+          multiline
+          {...register('username', {
+            required: 'Campo obrigatório',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Email inválido',
+            },
+          })}
+          name="username"
+          type="text"
+          className={`form-control base-input ${
+            errors.username ? 'is-invalid' : ''
+          }`}
+        />
         <div className="form-floating mb-4 input">
-          <input
-            {...register('username', {
-              required: 'Campo obrigatório',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Email inválido',
-              },
-            })}
-            type="text"
-            className={`form-control base-input ${
-              errors.username ? 'is-invalid' : ''
-            }`}
-            placeholder="Email"
-            name="username"
-          />
-            <div className="invalid-feedback d-block">
-            {errors.password?.message}
+          <div className="invalid-feedback d-block">
+            {errors.username?.message}
           </div>
-          <label>E-mail</label>
         </div>
-        <div className="mb-2 form-floating">
-          <input
-            {...register('password', {
-              required: 'Campo obrigatório',
-            })}
-            type="password"
-            className={`form-control base-input ${
-              errors.password ? 'is-invalid' : ''
-            }`}
-            placeholder="Password"
-            name="password"
-            autoComplete="current-password"
-          />
+
+        <TextField
+          id="outlined-password-input"
+          label="Password"
+          type={showPassword ? 'text' : 'password'}
+          autoComplete="current-password"
+          {...register('password', {
+            required: 'Campo obrigatório',
+          })}
+          name="password"
+          className={`form-control base-input ${
+            errors.password ? 'is-invalid' : ''
+          }`}
+        />
+          <div className="form-floating mb-4 input">
           <div className="invalid-feedback d-block">
             {errors.password?.message}
           </div>
-          <label>Password</label>
         </div>
+
+        {/* <FormControl sx={{ m: 1, width: '100%', height: '56px' }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password">
+            Password
+          </InputLabel>
+          <OutlinedInput
+            {...register('password', {
+              required: 'Campo obrigatório',
+            })}
+            name="password"
+            className={`form-control base-input ${
+              errors.password ? 'is-invalid' : ''
+            }`}
+        
+            id="outlined-adornment-password"
+            type={showPassword ? 'text' : 'password'}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="password"
+          />          
+        </FormControl> */}
+
+        {/* <div className="form-floating mb-4 input">
+            <div className="invalid-feedback d-block">
+              {errors.password?.message}
+            </div>
+          </div> */}
+
         <Link to="/auth/recover" className="login-link-recover">
           Esqueci a senha
         </Link>

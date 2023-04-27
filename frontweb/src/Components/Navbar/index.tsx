@@ -1,12 +1,5 @@
-import {
-    faBell,
-    faDoorOpen,
-    faEnvelope,
-    faGears,
-    faUser,
-    faUserEdit,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AccountMenu from 'Components/MenuProfileIcon';
+import Notification from 'Components/NotificationIcon';
 import { useEffect, useRef, useState } from 'react';
 import { TokenData, getTokenData, isAuthenticated } from 'utils/auth';
 import history from 'utils/history';
@@ -15,7 +8,6 @@ import { removeAuthData } from '../../utils/storage';
 import './styles.css';
 
 function Navbar() {
-
   type AuthData = {
     authenticated: boolean;
     tokenData?: TokenData;
@@ -25,10 +17,10 @@ function Navbar() {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      setAuthData({authenticated: true,tokenData: getTokenData()});
+      setAuthData({ authenticated: true, tokenData: getTokenData() });
     } else {
       setAuthData({
-        authenticated: false
+        authenticated: false,
       });
     }
   }, []);
@@ -93,20 +85,23 @@ function Navbar() {
       </div>
       <div className="navbar-right">
         <div>
-        <span className="auth-logon-email">{autData.tokenData?.user_name} </span>
+          <span className="auth-logon-email">
+            {autData.tokenData?.user_name}{' '}
+          </span>
         </div>
-        <div className="navbar-icon">
+        {/* <div className="navbar-icon">
           <FontAwesomeIcon icon={faEnvelope} />
           <span className="navbar-icon-badge">6</span>
-        </div>
-        <div className="navbar-icon">
+        </div> */}
+        <Notification />
+        {/* <div className="navbar-icon">
           <FontAwesomeIcon icon={faBell} onClick={handleClick1} />
           <span className="navbar-icon-badge">1</span>
           {showMenu1 && (
             <div className="notification-container" ref={menuRef1}></div>
           )}
-        </div>
-        <div className="navbar-icon" onClick={handleClick}>
+        </div> */}
+        {/* <div className="navbar-icon" onClick={handleClick}>
           <FontAwesomeIcon icon={faUser} />
           {showMenu && (
             <ul className="perfil-menu" ref={menuRef}>
@@ -115,7 +110,8 @@ function Navbar() {
               <li > <FontAwesomeIcon icon={faDoorOpen} /> <a href="/auth" onClick={handleLogoutClick}>Sair</a></li>
             </ul>
           )}
-        </div>
+        </div> */}
+        <AccountMenu />
       </div>
     </nav>
   );
