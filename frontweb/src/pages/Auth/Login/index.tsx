@@ -4,6 +4,7 @@ import { AuthContext } from 'AuthContext';
 import ButtonIcon from 'Components/ButtonIcon';
 import { ReactComponent as LogonIcon } from 'assets/images/logon-icon.svg';
 import { useContext, useState } from 'react';
+
 import { useForm } from 'react-hook-form';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { getTokenData } from 'utils/auth';
@@ -11,16 +12,6 @@ import { requestBackendLogin } from 'utils/request';
 import { saveAuthData } from 'utils/storage';
 
 import './styles.css';
-import React from 'react';
-import {
-  FormControl,
-  IconButton,
-  Input,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-} from '@mui/material';
-import { Height, Visibility, VisibilityOff } from '@material-ui/icons';
 
 type FormData = {
   username: string;
@@ -34,21 +25,13 @@ type LocationState = {
 function Login() {
   const location = useLocation<LocationState>();
 
-  const [showPassword, setShowPassword] = React.useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
-
   const { from } = location.state || { from: { pathname: '/home' } };
 
   const { setAuthContextData } = useContext(AuthContext);
 
   const [hasError, setHasError] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -59,6 +42,7 @@ function Login() {
   const history = useHistory();
 
   const onSubmit = (formData: FormData) => {
+    setIsLoading(true);
     requestBackendLogin(formData)
       .then((response) => {
         saveAuthData(response.data);
@@ -70,6 +54,7 @@ function Login() {
         history.replace(from);
       })
       .catch((error) => {
+        setIsLoading(false);
         setHasError(true);
         console.log('ERRO', error);
       });
@@ -116,7 +101,7 @@ function Login() {
         <TextField
           id="outlined-password-input"
           label="Password"
-          type={showPassword ? 'text' : 'password'}
+          type="password"
           autoComplete="current-password"
           {...register('password', {
             required: 'Campo obrigatório',
@@ -126,54 +111,23 @@ function Login() {
             errors.password ? 'is-invalid' : ''
           }`}
         />
-          <div className="form-floating mb-4 input">
+        <div className="form-floating mb-4 input">
           <div className="invalid-feedback d-block">
             {errors.password?.message}
           </div>
         </div>
 
-        {/* <FormControl sx={{ m: 1, width: '100%', height: '56px' }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">
-            Password
-          </InputLabel>
-          <OutlinedInput
-            {...register('password', {
-              required: 'Campo obrigatório',
-            })}
-            name="password"
-            className={`form-control base-input ${
-              errors.password ? 'is-invalid' : ''
-            }`}
-        
-            id="outlined-adornment-password"
-            type={showPassword ? 'text' : 'password'}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="password"
-          />          
-        </FormControl> */}
-
-        {/* <div className="form-floating mb-4 input">
-            <div className="invalid-feedback d-block">
-              {errors.password?.message}
-            </div>
-          </div> */}
-
         <Link to="/auth/recover" className="login-link-recover">
           Esqueci a senha
         </Link>
         <div className="login-submit">
-          <ButtonIcon text="Fazer login" />
+          <ButtonIcon
+            text="Entrar"
+            buttonState={isLoading ? 'loading' : 'idle'}
+            isLoading={isLoading}
+            disabled={isLoading}
+            textExe={"Logando"}
+          />
         </div>
       </form>
     </div>

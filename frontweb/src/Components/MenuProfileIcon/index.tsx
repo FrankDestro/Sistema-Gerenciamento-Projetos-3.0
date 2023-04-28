@@ -10,6 +10,15 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { TokenData, getTokenData, isAuthenticated } from 'utils/auth';
+import { removeAuthData } from 'utils/storage';
+import history from "utils/history"
+
+type AuthData = {
+  authenticated: boolean;
+  tokenData?: TokenData;
+};
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -20,6 +29,34 @@ export default function AccountMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const [,setAuthData] = useState<AuthData>({ authenticated: false });
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      setAuthData({
+        authenticated: true,
+        tokenData: getTokenData(),
+      });
+    } else {
+      setAuthData({
+        authenticated: false,
+      });
+    }
+  }, []);
+
+  const handleLogoutClick = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    removeAuthData();
+    setAuthData({
+      authenticated: false,
+    });
+    window.location.replace('/auth');
+    history.replace('/');
+  };
+
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -96,7 +133,7 @@ export default function AccountMenu() {
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          Logout
+          <span onClick={handleLogoutClick}>Logout</span>
         </MenuItem>
       </Menu>
     </React.Fragment>

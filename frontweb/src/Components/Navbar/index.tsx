@@ -2,8 +2,6 @@ import AccountMenu from 'Components/MenuProfileIcon';
 import Notification from 'Components/NotificationIcon';
 import { useEffect, useRef, useState } from 'react';
 import { TokenData, getTokenData, isAuthenticated } from 'utils/auth';
-import history from 'utils/history';
-import { removeAuthData } from '../../utils/storage';
 
 import './styles.css';
 
@@ -25,22 +23,22 @@ function Navbar() {
     }
   }, []);
 
-  const handleLogoutClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    removeAuthData();
-    setAuthData({
-      authenticated: false,
-    });
-    history.replace('/');
-  };
+  // const handleLogoutClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  //   event.preventDefault();
+  //   removeAuthData();
+  //   setAuthData({
+  //     authenticated: false,
+  //   });
+  //   history.replace('/');
+  // };
 
   // Perfil
-  const [showMenu, setShowMenu] = useState(false);
+  const [, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLUListElement | null>(null);
 
-  const handleClick = () => {
-    setShowMenu(!showMenu);
-  };
+  // const handleClick = () => {
+  //   setShowMenu(!showMenu);
+  // };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -56,12 +54,12 @@ function Navbar() {
   }, []);
 
   // Notification
-  const [showMenu1, setShowMenu1] = useState(false);
+  const [, setShowMenu1] = useState(false);
   const menuRef1 = useRef<HTMLDivElement | null>(null);
 
-  const handleClick1 = () => {
-    setShowMenu1(!showMenu);
-  };
+  // const handleClick1 = () => {
+  //   setShowMenu1(!showMenu);
+  // };
 
   const handleClickOutside1 = (event: MouseEvent) => {
     if (menuRef1.current && !menuRef1.current.contains(event.target as Node)) {
