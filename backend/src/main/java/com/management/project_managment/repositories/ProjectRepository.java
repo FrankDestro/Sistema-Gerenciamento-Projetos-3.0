@@ -30,8 +30,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             + " WHERE t.id_project = :id"
             + " GROUP BY p.name")
     List<Object[]> findProjectTasks(Long id);
-    
-    
+        
     @Query(nativeQuery = true, value = "SELECT "
             + " COUNT(*) AS total_tasks, "
             + " COUNT(*) FILTER (WHERE t.status = 0) AS unfinished_tasks, "

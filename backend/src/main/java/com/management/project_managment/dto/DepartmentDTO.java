@@ -2,11 +2,9 @@ package com.management.project_managment.dto;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.management.project_managment.entities.Department;
-import com.management.project_managment.entities.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

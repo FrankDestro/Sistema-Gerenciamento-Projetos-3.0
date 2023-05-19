@@ -2,16 +2,9 @@ package com.management.project_managment.dto;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
-import com.management.project_managment.entities.Project;
 import com.management.project_managment.entities.Task;
-import com.management.project_managment.entities.User;
+import com.management.project_managment.enums.Priority;
 import com.management.project_managment.enums.Status;
 
 import lombok.AllArgsConstructor;
@@ -33,10 +26,12 @@ public class TaskDTO implements Serializable {
 	private Date dataInitial;
 	private Date dueData;
 	private Status status;
+	private Priority priority;
 	private Long userId;
 	private String userName;
 	private Long projectId;
 	private String projectName;
+	private Integer totalDuration;
 
 	public TaskDTO(Task entity) {
 		id = entity.getId();
@@ -45,10 +40,12 @@ public class TaskDTO implements Serializable {
 		dataInitial = entity.getDataInitial();
 		dueData = entity.getDueData();
 		status = entity.getStatus();
+		priority = entity.getPriority();
 		userId = entity.getUser().getId();
 		userName = entity.getUser().getFirstName();
 		projectId = entity.getProject().getId();
 		projectName = entity.getProject().getName();
+		totalDuration = entity.getTotalDuration();
 	}
 
 }

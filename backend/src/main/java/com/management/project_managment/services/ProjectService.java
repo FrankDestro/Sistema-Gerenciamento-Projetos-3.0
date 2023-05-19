@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,12 +46,32 @@ public class ProjectService {
 	@Autowired 
 	private AuthService authService;
 
+	
 	@Transactional(readOnly = true)
 	public Page<ProjectDTO> findAllPaged(Pageable pageable) {
-		Page<Project> list = projectRepository.findAll(pageable);
-		return list.map(x -> new ProjectDTO(x));
+	    Page<Project> projectPage = projectRepository.findAll(pageable);
+	    List<ProjectDTO> projectDTOList = new ArrayList<>();
+
+	    for (Project project : projectPage) {
+	        ProjectDTO dto = new ProjectDTO(project);
+
+	        Object[] projectTasks = projectRepository.findProjectTasks(project.getId()).stream().findFirst().orElse(null);
+	        if (projectTasks != null) {
+	            dto.setTotalTasks(((BigInteger) projectTasks[0]).intValue());
+	            dto.setUnfinishedTasks(((BigInteger) projectTasks[1]).intValue());
+	            dto.setCompletedTasks(((BigInteger) projectTasks[2]).intValue());
+	            dto.setCanceledTasks(((BigInteger) projectTasks[3]).intValue());
+	        }
+	        
+	        Double percentCompleted = projectRepository.PercentualConcluido(project.getId());
+	        dto.setPercentCompleted(percentCompleted);
+
+	        projectDTOList.add(dto);
+	    }
+	    
+	    return new PageImpl<>(projectDTOList, pageable, projectPage.getTotalElements());
 	}
-	
+
 	
 	@Transactional(readOnly = true)
 	public List<SummaryProjectByDateProjection> getSummaryProjectByDate(String initialDate1, String initialDate2) throws ParseException {

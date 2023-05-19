@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.Instant;
 
 import com.management.project_managment.entities.Notification;
-import com.management.project_managment.entities.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

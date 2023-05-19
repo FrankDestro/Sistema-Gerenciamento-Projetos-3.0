@@ -1,13 +1,20 @@
 package com.management.project_managment.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.management.project_managment.dto.ClientDTO;
+import com.management.project_managment.dto.HistoricDTO;
 import com.management.project_managment.dto.TaskDTO;
 import com.management.project_managment.entities.Project;
 import com.management.project_managment.entities.Task;
@@ -31,7 +38,15 @@ public class TaskService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
+	@Transactional(readOnly = true)
+	public TaskDTO findTaskById(Long id) {
+		authService.validaIfUserIsAdmin();
+		Optional<Task> obj = taskRepository.findById(id);
+		Task entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+		return new TaskDTO(entity);
+	}
+
 	@Transactional(readOnly = true)
 	public Page<TaskDTO> findAllTask(Pageable pageable) {
 		Page<Task> list = taskRepository.findAll(pageable);

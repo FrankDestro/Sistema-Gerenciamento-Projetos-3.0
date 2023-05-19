@@ -5,8 +5,19 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
+import org.hibernate.annotations.Formula;
+
+import com.management.project_managment.enums.Priority;
 import com.management.project_managment.enums.Status;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +25,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Getter
 @Setter
@@ -38,6 +48,11 @@ public class Task implements Serializable {
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")	
 	private Date dueData;
 	private Status status;
+	private Priority priority;
+	
+	@Formula("(SELECT SUM(EXTRACT(DAY FROM (t.due_data - t.data_initial))) + 1 FROM tb_task t WHERE t.id = id)")
+	@Column(name = "total_duration")
+	private Integer totalDuration;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_user")

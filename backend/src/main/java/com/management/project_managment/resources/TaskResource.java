@@ -33,6 +33,12 @@ public class TaskResource {
 		return ResponseEntity.ok().body(list);
 	}
 	
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<TaskDTO> findTaskById(@PathVariable Long id) {
+		TaskDTO dto = taskService.findTaskById(id);		
+		return ResponseEntity.ok().body(dto);
+	}
+	
 	@PostMapping
 	public ResponseEntity<TaskDTO> CreateTask(@RequestBody TaskDTO dto) {
 		dto = taskService.CreateTask(dto);

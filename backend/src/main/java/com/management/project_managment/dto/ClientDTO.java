@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.management.project_managment.entities.Client;
-import com.management.project_managment.entities.Project;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,10 +1,11 @@
 package com.management.project_managment.dto;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.management.project_managment.entities.Project;
-import com.management.project_managment.entities.Task;
 import com.management.project_managment.enums.Status;
 
 public class ProjectDTO implements Serializable {
